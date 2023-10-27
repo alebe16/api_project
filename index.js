@@ -16,15 +16,25 @@ try {
 });
 
 app.get('/noticias', async (req, res) => {
-try {
-    
+    try {
     const response = await axios.get('https://newsapi.org/v2/everything?domains=wsj.com&apiKey=339006c22dfd461aa1641bbbc9d59ce7');
     const noticiasData = response.data;
-    res.json(noticiasData);
-} catch (error) {
+
+    const noticiasEspecificas = noticiasData.articles.filter(noticia => {
+        return noticia.title === '"Solar Woes Deepen After Enphase Stock Plunges to Three-Year Low"'; 
+    });
+
+
+    if (noticiasEspecificas.length > 0) {
+        res.json(noticiasEspecificas[0]); 
+    } else {
+        res.status(404).json({ error: 'No se encontraron noticias específicas' });
+    }
+    } catch (error) {
     res.status(500).json({ error: 'Error al obtener datos de noticias' });
-}
+    }
 });
+
 
 
 app.get('/clima-noticias', async (req, res) => {
@@ -51,6 +61,8 @@ try {
 app.listen(port, () => {
 console.log(`La API está escuchando en el puerto ${port}`);
 });
+
+
 
 
 
