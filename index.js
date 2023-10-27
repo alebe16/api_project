@@ -3,7 +3,7 @@ const axios = require('axios');
 const app = express();
 const port = 3000;
 
-// Ruta para obtener datos del clima
+
 app.get('/clima', async (req, res) => {
 try {
     const response = await axios.get('https://api.openweathermap.org/data/2.5/weather?lat=4.6097&lon=-74.0817&appid=710f1f613ca801ab2476006f74a4ccf0');
@@ -14,7 +14,7 @@ try {
 }
 });
 
-// Ruta para obtener datos de noticias
+
 app.get('/noticias', async (req, res) => {
 const newsApiUrl = 'https://newsapi.org/v2/everything?domains=wsj.com&apiKey=339006c22dfd461aa1641bbbc9d59ce7';
 
@@ -50,7 +50,7 @@ try {
 }
 });
 
-// Ruta para combinar datos de clima y noticias
+
 app.get('/clima-noticias', async (req, res) => {
 try {
     const climaResponse = await axios.get('https://api.openweathermap.org/data/2.5/weather?lat=4.6097&lon=-74.0817&appid=710f1f613ca801ab2476006f74a4ccf0');
