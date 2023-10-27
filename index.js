@@ -1,41 +1,57 @@
 const express = require('express');
+const axios = require('axios');
 const app = express();
+const port = 3000;
 
-app.use(express.json());
 
-const weather = [
-    { id: 1, city: 'Bogota', temperature: 11, worse: true },
-    { id: 2, city: 'Barranquilla', temperature: 32, worse: false }
-];
+app.get('/clima', async (req, res) => {
+try {
 
-const news = [
-    { id: 1, headline: 'News 1', content: 'Worse weather in this city' },
-    { id: 2, headline: 'News 2', content: 'Good weather in this city' }
-];
-
-app.get('/', (req, res) => {
-    res.send('Node JS API');
+    const response = await axios.get('https://api.openweathermap.org/data/2.5/weather?lat=4.6097&lon=-74.0817&appid=710f1f613ca801ab2476006f74a4ccf0');
+    const climaData = response.data;
+    res.json(climaData);
+} catch (error) {
+    res.status(500).json({ error: 'Error al obtener datos del clima' });
+}
 });
 
-app.get('/api/weather', (req, res) => {
-    res.json(weather);
+app.get('/noticias', async (req, res) => {
+try {
+    
+    const response = await axios.get('https://newsapi.org/v2/everything?domains=wsj.com&apiKey=339006c22dfd461aa1641bbbc9d59ce7');
+    const noticiasData = response.data;
+    res.json(noticiasData);
+} catch (error) {
+    res.status(500).json({ error: 'Error al obtener datos de noticias' });
+}
 });
 
-app.get('/api/news', (req, res) => {
-    res.json(news);
-});
 
-app.get('/api/weather-news', (req, res) => {
-    const combinedData = {
-        weather: weather,
-        news: news
+app.get('/clima-noticias', async (req, res) => {
+try {
+
+    const climaResponse = await axios.get('https://api.openweathermap.org/data/2.5/weather?lat=4.6097&lon=-74.0817&appid=710f1f613ca801ab2476006f74a4ccf0');
+    const noticiasResponse = await axios.get('https://newsapi.org/v2/everything?domains=wsj.com&apiKey=339006c22dfd461aa1641bbbc9d59ce7');
+
+    const climaData = climaResponse.data;
+    const noticiasData = noticiasResponse.data;
+
+    
+    const datosCombinados = {
+    clima: climaData,
+    noticias: noticiasData,
     };
-    res.json(combinedData);
+
+    res.json(datosCombinados);
+} catch (error) {
+    res.status(500).json({ error: 'Error al obtener datos' });
+}
 });
 
-app.listen(3000, () => {
-    console.log('API escuchando en el puerto 3000');
+app.listen(port, () => {
+console.log(`La API está escuchando en el puerto ${port}`);
 });
+
 
 
 
